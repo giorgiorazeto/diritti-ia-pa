@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Digitale Diritti IA & PA</title>
+    <style>
+        :root {
+            --color-primary: #2150A8;
+            --color-primary-dark: #1a3d8c;
+            --color-accent: #32B8C6;
+            --color-success: #218C8D;
+            --color-warning: #A84B2F;
+            --color-error: #C0152F;
+            --color-bg: #FCFCF9;
+            --color-surface: #FFFFFF;
+            --color-text: #134252;
+            --color-text-light: #626C7C;
+            --color-border: rgba(94, 82, 64, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.8;
+            letter-spacing: 0.3px;
+            font-size: 15px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* Sidebar - FIX SOVRAPPOSIZIONE */
+        .sidebar {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 24px;
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            z-index: 1000;
+            /* Flexbox per gestire il footer dinamico */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .logo-icon { font-size: 28px; }
+
+        .tagline {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.4;
+            flex-shrink: 0;
+        }
+
+        .motto {
+            background: rgba(255,255,255,0.1);
+            border-left: 3px solid var(--color-accent);
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            font-style: italic;
+            line-height: 1.5;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.8;
+            letter-spacing: 0.5px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Contenitore Menu per lo scroll */
+        .menu-container {
+            flex-grow: 1; /* Occupa lo spazio disponibile */
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            background: transparent;
+            color: white;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(4px);
+        }
+
+        .menu-item.active {
+            background: var(--color-accent);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .menu-item-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        /* Footer Note - CORRETTO: Non più absolute */
+        .footer-note {
+            margin-top: auto; /* Spinge verso il basso se c'è spazio */
+            padding-top: 20px;
+            padding-bottom: 20px; /* Spazio extra in fondo */
+            font-size: 11px;
+            opacity: 0.8;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            width: 100%;
+            max-width: none;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .header-icon { font-size: 40px; }
+
+        .header-text h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+            color: var(--color-primary);
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: var(--color-text-light);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: var(--color-bg);
+            padding: 10px 0;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(33, 80, 168, 0.1);
+        }
+
+        .search-box button {
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .search-box button:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title-main {
+            font-size: 22px;
+            color: var(--color-primary);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(33, 80, 168, 0.08);
+            border-color: var(--color-accent);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--color-text-light);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .card-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--color-text);
+            margin-bottom: 12px;
+        }
+
+        .norma-box {
+            background: #F0F8FF;
+            border-left: 4px solid var(--color-accent);
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.7;
+        }
+
+        .norma-label {
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .esempio-box {
+            background: #F0FFF5;
+            border-left: 4px solid var(--color-success);
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--color-text);
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        .esempio-label {
+            font-weight: 600;
+            color: var(--color-success);
+        }
+
+        .warning-box {
+            background: #FFFBF0;
+            border-left: 4px solid var(--color-warning);
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--color-text);
+            line-height: 1.7;
+        }
+
+        .warning-label {
+            font-weight: 600;
+            color: var(--color-warning);
+        }
+
+        /* FAQ Styling */
+        .faq-item { cursor: pointer; }
+        .faq-answer { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); }
+        .faq-answer.open { display: block; }
+        .accordion-toggle { display: inline-block; width: 20px; transition: transform 0.2s ease; }
+        .faq-item.open .accordion-toggle { transform: rotate(180deg); }
+
+        /* Mobile specific fixes */
+        .mobile-menu-toggle { display: none; }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 80%;
+                max-width: 300px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            }
+
+            .sidebar.active { transform: translateX(0); }
+
+            .main-content { margin-left: 0; padding: 20px; margin-top: 60px; }
+
+            /* FIX MOBILE HEADER OVERLAP */
+            .search-box {
+                top: 70px; /* Header (60px) + Gap (10px) */
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                background: var(--color-primary);
+                color: white;
+                z-index: 999;
+                padding: 0 20px;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                font-weight: bold;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .hamburger { font-size: 24px; cursor: pointer; }
+            
+            /* Overlay when menu is open */
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 998;
+            }
+            .overlay.active { display: block; }
+        }
+
+        /* Search Highlight */
+        .search-highlight { background-color: #fff3cd; padding: 2px; }
+        .no-results { text-align: center; padding: 40px; color: var(--color-text-light); display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <div class="mobile-menu-toggle">
+        <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
+        <div>Guida Diritti IA</div>
+    </div>
+    <div class="overlay" onclick="toggleMobileMenu()" id="overlay"></div>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <span class="logo-icon">⚖️</span>
+                <span>Diritti & IA</span>
+            </div>
+            <div class="tagline">Guida Operativa per il Cittadino</div>
+
+            <div class="motto">
+                <strong>"L'IA propone, il diritto dispone, ma l'uomo resta l'unico garante della giustizia."</strong>
+            </div>
+
+            <div class="section-title">Accesso Rapido</div>
+            
+            <div class="menu-container">
+                <button class="menu-item active" onclick="showSection('home')">
+                    <span class="menu-item-icon">🏠</span> <span>Home</span>
+                </button>
+                <button class="menu-item" onclick="showSection('diritti')">
+                    <span class="menu-item-icon">🟢</span> <span>I miei Diritti</span>
+                </button>
+                <button class="menu-item" onclick="showSection('rischi')">
+                    <span class="menu-item-icon">⚠️</span> <span>Rischi e Pericoli</span>
+                </button>
+                <button class="menu-item" onclick="showSection('ricorso')">
+                    <span class="menu-item-icon">🚀</span> <span>Come fare Ricorso</span>
+                </button>
+                <button class="menu-item" onclick="showSection('edilizia')">
+                    <span class="menu-item-icon">🏗️</span> <span>Edilizia e Urbanistica</span>
+                </button>
+                <button class="menu-item" onclick="showSection('faq')">
+                    <span class="menu-item-icon">❓</span> <span>Domande Frequenti</span>
+                </button>
+                <button class="menu-item" onclick="showSection('glossario')">
+                    <span class="menu-item-icon">📖</span> <span>Glossario</span>
+                </button>
+            </div>
+
+            <div class="footer-note">
+                Basato su L. 132/2025 e AI Act (UE 2024/1689)
+            </div>
+        </div>
+
+        <div class="main-content">
+            
+            <!-- Global Search Box -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cerca nel manuale (es. 'bonus', 'trasparenza', 'allucinazioni')..." onkeyup="performSearch()">
+                <button onclick="performSearch()">Cerca</button>
+            </div>
+
+            <!-- HOME SECTION -->
+            <div id="home" class="content-section active">
+                <div class="header">
+                    <div class="header-icon">⚖️</div>
+                    <div class="header-text">
+                        <h1>Guida Diritti IA & PA</h1>
+                        <p>La Riserva di Umanità: il cittadino al centro</p>
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">Benvenuto</div>
+                    <div class="card-content">
+                        <p>Questa Guida Digitale ti accompagna nella comprensione dei diritti che ti proteggono quando la Pubblica Amministrazione usa Intelligenza Artificiale.</p>
+                        <p style="margin-top: 12px;">L'IA nella PA non è una "scatola nera" senza regole. La legge europea (AI Act) e italiana (L. 132/2025) ti garantiscono:</p>
+                        <ul style="margin-top: 12px; margin-left: 20px;">
+                            <li><strong>Trasparenza:</strong> Devi sapere se stai parlando con un'IA</li>
+                            <li><strong>Spiegabilità:</strong> Ti devono spiegare come ha deciso</li>
+                            <li><strong>Riesame umano:</strong> Puoi chiedere che un umano riveda la decisione</li>
+                            <li><strong>Non discriminazione:</strong> Protezione da bias e pregiudizi</li>
+                            <li><strong>Privacy:</strong> I tuoi dati sono tutelati</li>
+                        </ul>
+                    </div>
+                    <div class="warning-box">
+                        <span class="warning-label">Ricorda:</span> Questo non è consulenza legale. Per situazioni specifiche, rivolgiti a un professionista.
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">Il Principio Fondamentale</div>
+                    <div class="card-content">
+                        <p><strong>L'IA è uno strumento di supporto, non un sostituto</strong></p>
+                        <p style="margin-top: 12px;">Cosa significa in pratica? L'IA può aiutare il funzionario a leggere documenti, fare calcoli, suggerire soluzioni (fase <em>istruttoria</em>), ma <strong>la decisione finale spetta sempre a una persona fisica</strong>.</p>
+                        <p style="margin-top: 12px;">Tu non sei mai giudicato solo da una macchina.</p>
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 14 L. 132/2025; Art. 14 AI Act
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIRITTI SECTION -->
+            <div id="diritti" class="content-section">
+                <div class="section-title-main">I Tuoi Diritti Fondamentali</div>
+                <p style="margin-bottom: 24px; color: var(--color-text-light);">Sei titolare di diritti "rinforzati" quando interagisci con sistemi IA nella PA. Non sei un soggetto passivo.</p>
+
+                <div class="card searchable">
+                    <div class="card-title">🟢 Diritto alla Trasparenza</div>
+                    <div class="card-subtitle">Devi sapere se stai parlando con un'IA</div>
+                    <div class="card-content">
+                        Hai il diritto di essere informato in modo chiaro quando interagisci con un sistema di IA o quando la tua pratica è gestita da algoritmi.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma Europea:</span> Art. 13 e 50 AI Act<br>
+                        <span class="norma-label">Norma Italiana:</span> Art. 14, comma 3, L. 132/2025
+                    </div>
+                    <div class="esempio-box">
+                        <span class="esempio-label">Esempio:</span> Se usi il portale del Comune e una chat ti aiuta, deve dire chiaramente "Sono un assistente virtuale (IA), non un operatore umano"
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">🔍 Diritto alla Spiegabilità</div>
+                    <div class="card-subtitle">La PA deve spiegare come ha deciso</div>
+                    <div class="card-content">
+                        La Pubblica Amministrazione deve essere in grado di spiegare in linguaggio semplice la logica e i criteri che hanno portato a una decisione automatizzata.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma Europea:</span> Art. 13 AI Act<br>
+                        <span class="norma-label">Norma Italiana:</span> Art. 14 L. 132/2025; Art. 3 L. 241/1990
+                    </div>
+                    <div class="esempio-box">
+                        <span class="esempio-label">Esempio edilizia:</span> Se una SCIA è rifiutata da un'IA, il tecnico comunale deve motivare il rigetto spiegando quale parametro urbanistico non è stato rispettato
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">👤 Diritto al Riesame Umano</div>
+                    <div class="card-subtitle">Puoi chiedere che un umano riveda la decisione</div>
+                    <div class="card-content">
+                        Nessuna decisione che incida significativamente sulla tua vita può essere presa esclusivamente da una macchina senza la possibilità di intervento da parte di un operatore umano.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma Europea:</span> Art. 14 AI Act<br>
+                        <span class="norma-label">Norma Italiana:</span> Art. 14, comma 2, L. 132/2025
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">⚖️ Diritto alla Non Discriminazione</div>
+                    <div class="card-subtitle">Protezione da bias e pregiudizi</div>
+                    <div class="card-content">
+                        È vietato l'uso di sistemi IA che producano esiti distorti basati su genere, etnia, età, origine o condizioni sociali.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma Europea:</span> Art. 10 AI Act<br>
+                        <span class="norma-label">Norma Italiana:</span> Art. 3 Costituzione; Art. 11 L. 132/2025
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">🔒 Diritto alla Privacy</div>
+                    <div class="card-subtitle">I tuoi dati sono protetti</div>
+                    <div class="card-content">
+                        I tuoi dati personali devono essere trattati secondo principi di minimizzazione e sicurezza. La PA non può usare dati sensibili senza garanzie rigorose di protezione.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma Europea:</span> GDPR (Reg. UE 2016/679) e AI Act<br>
+                        <span class="norma-label">Norma Italiana:</span> Art. 4 L. 132/2025; Codice Privacy
+                    </div>
+                </div>
+            </div>
+
+            <!-- RISCHI SECTION -->
+            <div id="rischi" class="content-section">
+                <div class="section-title-main">Rischi Specifici da Conoscere</div>
+                
+                <div class="card searchable">
+                    <div class="card-title">⚡ Bias (Pregiudizio)</div>
+                    <div class="card-content">
+                        <strong>Cos'è:</strong> L'IA impara da dati storici sbagliati o parziali e riproduce pregiudizi umani.<br>
+                        <strong>Conseguenza:</strong> Esclusione ingiusta di donne, giovani, stranieri dai servizi pubblici.<br>
+                        <strong>Come difendersi:</strong> Chiedi quali dataset sono stati usati per addestrare l'IA e pretendi test di equità.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 10 AI Act
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">🎭 Allucinazioni</div>
+                    <div class="card-content">
+                        <strong>Cos'è:</strong> L'IA inventa informazioni false facendole sembrare vere.<br>
+                        <strong>Esempio pratico:</strong> Un chatbot comunale dice "Per la SCIA basta il Modulo X entro 15 giorni", ma il modulo non esiste e la scadenza è 30 giorni.<br>
+                        <strong>Come difendersi:</strong> Non fidarti ciecamente. Verifica sempre le fonti ufficiali del Comune o chiama l'ufficio tecnico.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 13 AI Act (obbligo di accuratezza)
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">🔲 Opacità (Black Box)</div>
+                    <div class="card-content">
+                        <strong>Cos'è:</strong> Non si capisce come l'IA sia arrivata a una certa conclusione.<br>
+                        <strong>Come difendersi:</strong> Rivendica il Diritto alla Spiegabilità (Art. 13 AI Act).
+                    </div>
+                </div>
+            </div>
+
+            <!-- RICORSO SECTION -->
+            <div id="ricorso" class="content-section">
+                <div class="section-title-main">Come fare Ricorso</div>
+
+                <div class="card searchable">
+                    <div class="card-title">📋 Procedura Generale</div>
+                    <div class="card-content">
+                        <strong>Step 1: Raccogli le prove</strong> (Screenshot, atti)<br><br>
+                        <strong>Step 2: Reclamo all'URP</strong><br>
+                        Invia via PEC specificando il diritto violato (trasparenza, spiegabilità, riesame umano).<br><br>
+                        <strong>Step 3: Se nessuna risposta</strong><br>
+                        Difensore Civico Regionale, Garante Privacy o UNAR.<br><br>
+                        <strong>Step 4: Ricorso Giudiziale</strong><br>
+                        Ricorso al TAR entro 60 giorni. <span class="highlight">Consiglio vivamente di consultare un avvocato amministrativista.</span>
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">📞 Enti a cui Rivolgersi</div>
+                    <div class="card-content">
+                        <strong>Difensore Civico Regionale (Piemonte)</strong><br>
+                        Per contestare ritardi, iniquità o ingiustizie nei procedimenti amministrativi.<br><br>
+                        <strong>Garante per la Protezione dei Dati Personali</strong><br>
+                        Per violazioni della privacy o profilazioni algoritmiche non autorizzate.<br><br>
+                        <strong>AgID (Agenzia per l'Italia Digitale)</strong><br>
+                        Per segnalare non conformità tecnica dei sistemi IA.
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDILIZIA SECTION -->
+            <div id="edilizia" class="content-section">
+                <div class="section-title-main">Edilizia e Urbanistica</div>
+                
+                <div class="card searchable">
+                    <div class="card-title">📋 SCIA Edilizia Controllata da IA</div>
+                    <div class="card-content">
+                        Un'IA analizza i progetti SCIA e verifica automaticamente la coerenza con il Piano Regolatore.
+                    </div>
+                    <div class="card-content">
+                        <strong>I tuoi diritti:</strong>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Trasparenza:</strong> Il Comune deve dirti che l'IA ha aiutato a valutare</li>
+                            <li><strong>Spiegabilità:</strong> Se rifiutata, il tecnico deve motivare quale parametro non è stato rispettato</li>
+                            <li><strong>Riesame umano:</strong> Puoi chiedere che il tecnico riveda la decisione manualmente</li>
+                        </ul>
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 14 L. 132/2025
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">💰 Bonus Edilizi (Sismabonus, Ecobonus)</div>
+                    <div class="card-content">
+                        L'IA può assegnare un punteggio provvisorio, ma <strong>una commissione umana</strong> deve convalidare la graduatoria.
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 14 L. 132/2025 (supporto istruttorio, non decisione)
+                    </div>
+                </div>
+
+                <div class="card searchable">
+                    <div class="card-title">🛰️ Monitoraggio Satellitare (Abusivismo)</div>
+                    <div class="card-content">
+                        L'IA analizza immagini satellitari/droni per rilevare mutamenti del suolo. <strong>Solo dopo verifica umana scattano sanzioni.</strong>
+                    </div>
+                    <div class="norma-box">
+                        <span class="norma-label">Norma:</span> Art. 26 AI Act (sistemi di visione artificiale)
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ SECTION -->
+            <div id="faq" class="content-section">
+                <div class="section-title-main">Domande Frequenti</div>
+                
+                <div class="card faq-item searchable" onclick="toggleFaq(this)">
+                    <div class="card-title">
+                        <span class="accordion-toggle">▼</span>
+                        Come faccio a sapere se il Comune usa l'IA?
+                    </div>
+                    <div class="faq-answer">
+                        <div class="card-content">
+                            Puoi e devi chiedere esplicitamente. Hai il diritto di sapere. Chiedi all'URP o fai istanza di accesso civico (FOIA).
+                        </div>
+                        <div class="norma-box">
+                            <span class="norma-label">Norma:</span> Art. 14 L. 132/2025
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card faq-item searchable" onclick="toggleFaq(this)">
+                    <div class="card-title">
+                        <span class="accordion-toggle">▼</span>
+                        Posso oppormi se l'IA decide al mio posto?
+                    </div>
+                    <div class="faq-answer">
+                        <div class="card-content">
+                            <strong>Sì, assolutamente.</strong> Hai il diritto di non essere sottoposto a decisioni basate solo sull'IA. Puoi chiedere l'intervento di un operatore umano.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card faq-item searchable" onclick="toggleFaq(this)">
+                    <div class="card-title">
+                        <span class="accordion-toggle">▼</span>
+                        L'IA può decidere di negarmi un sussidio?
+                    </div>
+                    <div class="faq-answer">
+                        <div class="card-content">
+                            L'IA può <strong>suggerire</strong> il rifiuto, ma la <strong>decisione finale deve essere firmata da un funzionario umano</strong>.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Added placeholder for no results -->
+                <div id="no-results" class="no-results">
+                    Nessun risultato trovato per la tua ricerca.
+                </div>
+            </div>
+
+            <!-- GLOSSARIO SECTION -->
+            <div id="glossario" class="content-section">
+                <div class="section-title-main">Glossario</div>
+
+                <div class="card searchable">
+                    <div class="card-title">📖 Termini Essenziali</div>
+                    <div class="card-content">
+                        <p><strong>Algoritmo:</strong> Sequenza di istruzioni matematiche (la "ricetta" della decisione).</p><br>
+                        <p><strong>Bias:</strong> Pregiudizio insito nei dati che causa discriminazione.</p><br>
+                        <p><strong>Allucinazione:</strong> Quando l'IA inventa informazioni false.</p><br>
+                        <p><strong>Black Box:</strong> Sistema opaco di cui non si capisce il funzionamento.</p><br>
+                        <p><strong>Riserva di Umanità:</strong> Principio per cui l'uomo deve avere l'ultima parola.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Main Content -->
+    </div> <!-- End Container -->
+
+    <script>
+        // NAVIGATION LOGIC
+        function showSection(sectionId) {
+            // Se siamo in modalità ricerca, dobbiamo resettare la vista
+            if (document.getElementById('searchInput').value !== '') {
+                document.getElementById('searchInput').value = '';
+                performSearch(); // Resetta visibilità
+            }
+
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Find the button associated with this section and make it active
+            // We search by the onclick attribute to match
+            const buttons = document.querySelectorAll('.menu-item');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(sectionId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Scroll to top
+            window.scrollTo(0,0);
+            
+            // Close mobile menu if open
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // ACCORDION LOGIC
+        function toggleFaq(element) {
+            const answer = element.querySelector('.faq-answer');
+            element.classList.toggle('open');
+            answer.classList.toggle('open');
+        }
+
+        // MOBILE MENU LOGIC
+        function toggleMobileMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // SEARCH LOGIC (FIXED and IMPROVED)
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const searchableItems = document.querySelectorAll('.searchable');
+            const allSections = document.querySelectorAll('.content-section');
+            const noResults = document.getElementById('no-results');
+            
+            // RESET CONDITION: If query is empty
+            if (query === "") {
+                // Restore default view (Home active, others hidden)
+                // We remove inline styles (display: none/block) added by search
+                searchableItems.forEach(item => {
+                    item.style.display = ""; 
+                    // Close FAQs that might have been opened
+                    if(item.classList.contains('faq-item')) {
+                        item.classList.remove('open');
+                        const answer = item.querySelector('.faq-answer');
+                        if (answer) answer.classList.remove('open');
+                    }
+                });
+
+                // Hide no results message
+                if (noResults) noResults.style.display = "none";
+
+                // Ensure only the currently active section (from menu) is visible
+                // We re-trigger showSection for the currently active menu item
+                const activeBtn = document.querySelector('.menu-item.active');
+                if (activeBtn) {
+                     // Extract section ID from onclick="showSection('id')"
+                    const match = activeBtn.getAttribute('onclick').match(/'([^']+)'/);
+                    if (match && match[1]) {
+                         // We manually hide all sections first because showSection has a check for searchInput value
+                         // which would cause recursion if called directly without clearing value first (which we did).
+                         // But showSection logic is: hide all, show target. Perfect.
+                        showSection(match[1]);
+                    }
+                }
+                return;
+            }
+
+            // SEARCH CONDITION: Show all sections to search everywhere
+            allSections.forEach(section => section.classList.add('active'));
+
+            let foundCount = 0;
+
+            searchableItems.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = "block";
+                    foundCount++;
+                    // If it's an FAQ item, open it automatically so user sees context
+                    if(item.classList.contains('faq-item')) {
+                        item.classList.add('open');
+                        const answer = item.querySelector('.faq-answer');
+                        if (answer) answer.classList.add('open');
+                    }
+                } else {
+                    item.style.display = "none";
+                }
+            });
+
+            // NO RESULTS LOGIC (FIXED)
+            if (noResults) {
+                if (foundCount === 0) {
+                    noResults.style.display = "block";
+                } else {
+                    noResults.style.display = "none";
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure Home is active
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
